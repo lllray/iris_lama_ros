@@ -402,21 +402,30 @@ int main(int argc, char *argv[])
     ros::NodeHandle pnh("~");
     std::string rosbag_filename;
 
-    if( !pnh.getParam("rosbag", rosbag_filename ) || rosbag_filename.empty()) {
-        ROS_INFO("Running SLAM in Live Mode");
-    } else{
-        ROS_INFO("Running SLAM in Rosbag Mode (offline)");
-        lama::ReplayRosbag(pnh, rosbag_filename);
+    // if( !pnh.getParam("rosbag", rosbag_filename ) || rosbag_filename.empty()) {
+    //     ROS_INFO("Running SLAM in Live Mode");
+    // } else{
+    //     ROS_INFO("Running SLAM in Rosbag Mode (offline)");
+    //     lama::ReplayRosbag(pnh, rosbag_filename);
 
-        if (ros::ok())
-            slam2d_ros.printSummary();
+    //     if (ros::ok())
+    //         slam2d_ros.printSummary();
 
-        ROS_INFO("You can now save your map. Use ctrl-c to quit.");
-        // publish the maps a last time
-        slam2d_ros.publishMaps();
-    }
-
+    //     ROS_INFO("You can now save your map. Use ctrl-c to quit.");
+    //     // publish the maps a last time
+    //     slam2d_ros.publishMaps();
+    // }
     ros::spin();
+    slam2d_ros.publishMaps();
+    // ros::Rate rate(10);
+    // while(pnh.ok())
+    // {
+    // slam2d_ros.publishMaps();
+    
+    
+    // ros::spinOnce();
+    // rate.sleep();
+    // }
     return 0;
 }
 
