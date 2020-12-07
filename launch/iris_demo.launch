@@ -1,0 +1,27 @@
+<launch>
+    <arg name="scan_topic" default="/scan"/>
+    <arg name="particles" default="30"/>
+    <arg name="d_thresh"  default="0.5"/>
+    <arg name="a_thresh"  default="0.5"/>
+    <arg name="mrange"    default="20"/>
+    <arg name="use_compression" default="false"/>
+  
+
+    <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find iris_lama_ros)/launch/default.rviz" />
+
+    <node pkg="tf" type="static_transform_publisher" name="tf_map_odom"
+          args="0 0 0 0 0 0 map odom 100"/>
+    <node pkg="tf_to_pose" name="iris_pose" type="iris_pose" output="screen">
+     </node>
+    <param name="/use_sim_time" value="true"/>
+    <node pkg="iris_lama_ros" name="slam2d_ros" type="slam2d_ros" output="screen">
+        <param name="scan_topic" value="$(arg scan_topic)"/>
+        <param name="d_thresh"  value="$(arg d_thresh)"/>
+        <param name="a_thresh"  value="$(arg a_thresh)"/>
+        <param name="mrange"    value="$(arg mrange)"/>
+        <param name="use_compression" value="$(arg use_compression)"/>
+        <param name="create_summary"     value="true"/>
+        <param name="map_publish_period" value="2" />
+     </node>
+</launch>
+
