@@ -114,6 +114,7 @@ lama::Slam2DROS::~Slam2DROS()
 
 void lama::Slam2DROS::onLaserScan(const sensor_msgs::LaserScanConstPtr& laser_scan)
 {
+    //isWork(ros::Time::now(),1);
     int laser_index = -1;
 
     // verify if it is from a known source
@@ -324,6 +325,7 @@ bool lama::Slam2DROS::DistanceMsgFromOccupancyMap(nav_msgs::OccupancyGrid& msg)
         msg.data.resize(width*height);
 
     Image image;
+    
     image.alloc(width, height, 1);
     image.fill(50);
 
@@ -390,8 +392,26 @@ void lama::Slam2DROS::publishMaps()
 
 void lama::Slam2DROS::printSummary()
 {
-    if (slam2d_->summary)
+    if (slam2d_->summary&&slam2d_->summary->time.size()>=10)
         std::cout << slam2d_->summary->report() << std::endl;
+}
+
+bool lama::Slam2DROS::isWork(ros::Time time, int id) {
+    static std::list<ros::Time> times[2];
+    if(times[id].size()>1) times[id].pop_front();//最多存储两个时间,删除第一个元素
+    bool result=true;
+    //check this time diff all other time
+    for(int i=0;i<2;i++){
+        if(times[i].size()>0) {
+            double diff_time=fabs(times[i].back().toSec()-time.toSec());
+            if (diff_time>1.f){
+                ROS_ERROR("ID %d with ID %d time diff is %f > 1.0s",i,id,diff_time);
+                result=false;
+            }
+        }
+    }
+    if(time.toSec()>0.f)times[id].push_back(time);
+    return result;
 }
 
 int main(int argc, char *argv[])
@@ -415,17 +435,20 @@ int main(int argc, char *argv[])
     //     // publish the maps a last time
     //     slam2d_ros.publishMaps();
     // }
-    ros::spin();
+//    ros::spin();
+//    slam2d_ros.publishMaps();
+
+     ros::Rate rate(0.1);
+     while(ros::ok())
+     {
+     //if(!slam2d_ros.isWork(ros::Time::now(),0))break;
+     slam2d_ros.printSummary();
+     ros::spinOnce();
+     rate.sleep();
+     }
     slam2d_ros.publishMaps();
-    // ros::Rate rate(10);
-    // while(pnh.ok())
-    // {
-    // slam2d_ros.publishMaps();
-    
-    
-    // ros::spinOnce();
-    // rate.sleep();
-    // }
+    slam2d_ros.printSummary();
+    ros::spin();
     return 0;
 }
 

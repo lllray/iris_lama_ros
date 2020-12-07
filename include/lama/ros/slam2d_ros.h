@@ -72,6 +72,8 @@ public:
 
     void printSummary();
 
+    bool isWork(ros::Time time,int id);
+
 private:
 
     bool initLaser(const sensor_msgs::LaserScanConstPtr& laser_scan);

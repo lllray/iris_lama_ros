@@ -21,7 +21,7 @@
         <param name="mrange"    value="$(arg mrange)"/>
         <param name="use_compression" value="$(arg use_compression)"/>
         <param name="create_summary"     value="true"/>
-        <param name="map_publish_period" value="2" />
+        <param name="map_publish_period" value="10" />
      </node>
 </launch>
 
