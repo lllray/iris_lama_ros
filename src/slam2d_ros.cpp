@@ -365,6 +365,7 @@ void lama::Slam2DROS::publishCallback(const ros::TimerEvent &)
       ros_cost_.header.stamp = time;
       dist_pub_.publish(ros_cost_);
     }
+    if (slam2d_->summary)printSummary();
 }
 
 bool lama::Slam2DROS::onGetMap(nav_msgs::GetMap::Request &req, nav_msgs::GetMap::Response &res)
@@ -435,20 +436,8 @@ int main(int argc, char *argv[])
     //     // publish the maps a last time
     //     slam2d_ros.publishMaps();
     // }
-//    ros::spin();
-//    slam2d_ros.publishMaps();
-
-     ros::Rate rate(0.1);
-     while(ros::ok())
-     {
-     //if(!slam2d_ros.isWork(ros::Time::now(),0))break;
-     slam2d_ros.printSummary();
-     ros::spinOnce();
-     rate.sleep();
-     }
-    slam2d_ros.publishMaps();
-    slam2d_ros.printSummary();
     ros::spin();
+
     return 0;
 }
 
