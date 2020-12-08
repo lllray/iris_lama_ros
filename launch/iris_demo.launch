@@ -9,8 +9,8 @@
 
     <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find iris_lama_ros)/launch/default.rviz" />
 
-    <node pkg="tf" type="static_transform_publisher" name="tf_map_odom"
-          args="0 0 0 1.57 0 0 map odom 100"/>
+    <!-- <node pkg="tf" type="static_transform_publisher" name="tf_map_odom"
+          args="0 0 0 1.57 0 0 map odom 100"/> -->
     <node pkg="tf_to_pose" name="iris_pose" type="iris_pose" output="screen">
      </node>
     <param name="/use_sim_time" value="true"/>
